@@ -38,8 +38,8 @@ namespace ILRepack.IntegrationTests.Peverify
                 var parts = Path.GetFileName(dir)?.Split(' ');
 
                 if(parts == null || parts.Length != 3) continue;
-
-                if (Version.TryParse(parts[1], out var ver))
+                Version ver;
+                if (Version.TryParse(parts[1], out ver))
                 {
                     versions.Add(ver);
                 }
