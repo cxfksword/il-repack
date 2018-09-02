@@ -8,7 +8,7 @@ plugins {
   id 'net.researchgate.release' version '2.3.4'
 }
 
-archivesBaseName = 'ILRepack'
+archivesBaseName = 'avostres.ILRepack'
 
 defaultTasks('nugetPack')
 
@@ -71,10 +71,10 @@ repack << {
 def commonNuspecMetadata = [
     version: version,
     title: 'ILRepack - Open-source alternative to ILMerge',
-    authors: 'Francois Valdy',
-    owners: 'Francois Valdy',
-    projectUrl: 'https://github.com/gluck/il-repack',
-    copyright: 'Copyright Francois Valdy 2011-2015',
+    authors: 'Alexander Vostres, Francois Valdy',
+    owners: 'Alexander Vostres',
+    projectUrl: 'https://github.com/Alexx999/il-repack',
+    copyright: 'Copyright Alexander Vostres 2018, Francois Valdy 2011-2015',
     requireLicenseAcceptance: false,
     dependencies: []
 ]
