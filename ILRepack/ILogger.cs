@@ -1,7 +1,9 @@
 ﻿
+using System;
+
 namespace ILRepacking
 {
-    public interface ILogger
+    public interface ILogger : IDisposable
     {
         bool ShouldLogVerbose { get; set; }
 

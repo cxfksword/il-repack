@@ -8,6 +8,16 @@ namespace ILRepacking
         private string _outputFile;
         private StreamWriter _writer;
 
+        public RepackLogger(RepackOptions options)
+        {
+            ShouldLogVerbose = options.LogVerbose;
+
+            if (Open(options.LogFile))
+            {
+                options.Log = true;
+            }
+        }
+
         public bool ShouldLogVerbose { get; set; }
 
         public void Log(object str)
@@ -59,6 +69,11 @@ namespace ILRepacking
         {
             // TODO: put on a list and log a summary
             //INFO("Ignoring duplicate " + ignoredType + " " + ignoredObject);
+        }
+
+        public void Dispose()
+        {
+            Close();
         }
     }
 }

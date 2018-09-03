@@ -33,7 +33,7 @@ using Mono.Cecil.Cil;
 
 namespace ILRepacking
 {
-    public class ILRepack : IRepackContext
+    public class ILRepack : IRepackContext, IDisposable
     {
         internal RepackOptions Options;
         internal ILogger Logger;
@@ -67,7 +67,7 @@ namespace ILRepacking
         private readonly RepackImporter _repackImporter;
 
         public ILRepack(RepackOptions options)
-            : this(options, new RepackLogger())
+            : this(options, new RepackLogger(options))
         {
         }
 
@@ -75,8 +75,6 @@ namespace ILRepacking
         {
             Options = options;
             Logger = logger;
-
-            logger.ShouldLogVerbose = options.LogVerbose;
 
             _repackImporter = new RepackImporter(Logger, Options, this, _aspOffsets);
         }
@@ -486,6 +484,14 @@ namespace ILRepacking
         TypeReference IRepackContext.GetExportedTypeFromTypeRef(TypeReference type)
         {
             return _mappingHandler.GetExportedRemappedType(type) ?? type;
+        }
+
+        public void Dispose()
+        {
+            TargetAssemblyDefinition?.Dispose();
+            PrimaryAssemblyDefinition?.Dispose();
+            GlobalAssemblyResolver?.Dispose();
+            Logger?.Dispose();
         }
     }
 }

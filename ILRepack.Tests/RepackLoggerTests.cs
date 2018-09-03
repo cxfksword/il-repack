@@ -9,7 +9,7 @@ namespace ILRepack.Tests
         [Test]
         public void GivenAnEmptyOutputFile__OpenFile_LogLine__OpenReturnsFalse_LogDoesNotThrowError()
         {
-            RepackLogger logger = new RepackLogger();
+            RepackLogger logger = new RepackLogger(new RepackOptions());
             Assert.IsFalse(logger.Open(""));
             logger.Log("Hello");
         }
@@ -17,7 +17,7 @@ namespace ILRepack.Tests
         [Test]
         public void GivenAnEmptyOutputFile__OpenFile_CloseFile__OpenReturnsFalse_ClosedDoesNotThrowError()
         {
-            RepackLogger logger = new RepackLogger();
+            RepackLogger logger = new RepackLogger(new RepackOptions());
             Assert.IsFalse(logger.Open(""));
             logger.Close();
         }
@@ -25,10 +25,10 @@ namespace ILRepack.Tests
         [Test]
         public void GivenOutputFile__OpenFile_CloseFile_LogError__StreamIsOpened_StreamIsClosed_NoErrorIsThrown()
         {
-            RepackLogger logger = new RepackLogger();
+            RepackLogger logger = new RepackLogger(new RepackOptions());
             Assert.IsTrue(logger.Open("file.out"));
             logger.Close();
-            const string message = "Only written to the console. No erorr is thrown.";
+            const string message = "Only written to the console. No error is thrown.";
             logger.Error(message);
             logger.Warn(message);
             logger.Verbose(message);

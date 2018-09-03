@@ -8,8 +8,8 @@ namespace ILRepacking
         [STAThread]
         static int Main(string[] args)
         {
-            RepackLogger logger = new RepackLogger();
             RepackOptions options = new RepackOptions(args);
+            var logger = new RepackLogger(options);
             int returnCode = -1;
             try
             {
@@ -18,15 +18,10 @@ namespace ILRepacking
                     Usage();
                     Exit(2);
                 }
-                logger.ShouldLogVerbose = options.LogVerbose;
-                //TODO: Open the Logger before the parse
-                if (logger.Open(options.LogFile))
-                {
-                    options.Log = true;
-                }
 
                 ILRepack repack = new ILRepack(options, logger);
                 repack.Repack();
+                repack.Dispose();
                 returnCode = 0;
             }
             catch (RepackOptions.InvalidTargetKindException e)
@@ -42,7 +37,7 @@ namespace ILRepacking
             }
             finally
             {
-                logger.Close();
+                logger.Dispose();
                 if (options.PauseBeforeExit)
                 {
                     Console.WriteLine("Press Any Key To Continue");
