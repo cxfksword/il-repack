@@ -404,7 +404,7 @@ namespace ILRepacking
             foreach (var srcFileName in Directory.EnumerateFiles(srcDir))
             {
                 var fileName = Path.GetFileName(srcFileName);
-                var tgtFileName = GetFileName(tgtDir, fileName);
+                var tgtFileName = Path.Combine(tgtDir, fileName);
                 if (File.Exists(tgtFileName))
                 {
                     File.Delete(tgtFileName);
@@ -415,18 +415,12 @@ namespace ILRepacking
             Directory.Delete(srcDir, false);
         }
 
-        private string GetFileName(string tgtDir, string fileName)
-        {
-            if (string.IsNullOrEmpty(tgtDir)) return fileName;
-            return $"{tgtDir}\\{fileName}";
-        }
-
         private string GetTempFile(string outputFileName)
         {
             var fileName = Path.GetFileName(outputFileName);
-            var dirName = $"{Path.GetTempPath()}{Path.GetRandomFileName()}";
+            var dirName = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             Directory.CreateDirectory(dirName);
-            return $"{dirName}\\{fileName}";
+            return Path.Combine(dirName, fileName);
         }
 
         private ISourceServerDataRepackStep GetSourceServerDataStep(bool isUnixEnvironment)
