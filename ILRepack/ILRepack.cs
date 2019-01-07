@@ -400,6 +400,7 @@ namespace ILRepacking
         {
             var srcDir = Path.GetDirectoryName(tempFile);
             var tgtDir = Path.GetDirectoryName(outFile);
+            Directory.CreateDirectory(tgtDir);
 
             foreach (var srcFileName in Directory.EnumerateFiles(srcDir))
             {
