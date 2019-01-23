@@ -271,7 +271,15 @@ namespace ILRepacking
             // Read input assemblies only after all properties are set.
             ReadInputAssemblies();
 
-            _platformFixer = new PlatformFixer(this, PrimaryAssemblyMainModule.Runtime);
+            if (!Options.KeepOtherVersionReferences)
+            {
+                _platformFixer = new PlatformAndDuplicateFixer(this, PrimaryAssemblyMainModule.Runtime);
+            }
+            else
+            {
+                _platformFixer = new PlatformFixer(this, PrimaryAssemblyMainModule.Runtime);
+            }
+
             _mappingHandler = new MappingHandler();
             bool hadStrongName = PrimaryAssemblyDefinition.Name.HasPublicKey;
 
@@ -329,7 +337,7 @@ namespace ILRepacking
                 {
                     win32ResourceStep,
                     signingStep,
-                    new ReferencesRepackStep(Logger, this),
+                    new ReferencesRepackStep(Logger, this, Options),
                     new TypesRepackStep(Logger, this, _repackImporter, Options),
                     new ResourcesRepackStep(Logger, this, Options),
                     new AttributesRepackStep(Logger, this, _repackImporter, Options),

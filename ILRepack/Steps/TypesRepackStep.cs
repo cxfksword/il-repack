@@ -143,6 +143,8 @@ namespace ILRepacking.Steps
 
         private TypeReference CreateReference(ExportedType type)
         {
+            _repackContext.PlatformFixer.FixPlatformVersion(type);
+
             return new TypeReference(type.Namespace, type.Name, _repackContext.TargetAssemblyMainModule, _repackContext.MergeScope(type.Scope))
             {
                 DeclaringType = type.DeclaringType != null ? CreateReference(type.DeclaringType) : null,
