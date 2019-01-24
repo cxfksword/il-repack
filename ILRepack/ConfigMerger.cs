@@ -13,9 +13,12 @@
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
 //
+
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
+using System.Linq;
 using System.Xml;
 
 namespace ILRepacking
@@ -41,14 +44,19 @@ namespace ILRepacking
                     return;
 
                 string firstFile = validConfigFiles[0];
-                var dataset = new System.Data.DataSet();
+                var dataset = new DataSet();
                 dataset.ReadXml(firstFile);
-                validConfigFiles.Remove(firstFile);
 
-                foreach (string configFile in validConfigFiles)
+                var mergedAssemblies = new HashSet<string>(repack.MergedAssemblies.Select(a => a.Name.Name));
+
+                ProcessRedirects(dataset, mergedAssemblies, repack.Options);
+
+                foreach (string configFile in validConfigFiles.Skip(1))
                 {
-                    var nextDataset = new System.Data.DataSet();
+                    var nextDataset = new DataSet();
                     nextDataset.ReadXml(configFile);
+                    ProcessRedirects(nextDataset, mergedAssemblies, repack.Options);
+                    RemoveVersions(nextDataset);
                     dataset.Merge(nextDataset);
                 }
                 dataset.WriteXml(repack.Options.OutputFile + ".config");
@@ -57,6 +65,40 @@ namespace ILRepacking
             {
                 repack.Logger.Error("Failed to merge configuration files: " + e);
             }
+        }
+
+        private static void RemoveVersions(DataSet set)
+        {
+            var table = set.Tables["supportedRuntime"];
+            if (table == null) return;
+
+            var versions = table.Select().ToList();
+            foreach (var row in versions)
+            {
+                row.Delete();
+            }
+            table.AcceptChanges();
+        }
+
+        private static void ProcessRedirects(DataSet set, HashSet<string> mergedAssemblies, RepackOptions repackOptions)
+        {
+            if(repackOptions.KeepOtherVersionReferences) return;
+
+            var table = set.Tables["assemblyIdentity"];
+            var table2 = set.Tables["dependentAssembly"];
+            if (table == null || table2 == null) return;
+            var parentRelation = table.ParentRelations[0];
+            var parentRelation2 = table2.ParentRelations[0];
+            var nameCol = table.Columns["name"];
+            var toDelete = table.Select().Where(r => mergedAssemblies.Contains(r[nameCol] as string)).ToList();
+            foreach (var row in toDelete)
+            {
+                if(row.RowState == DataRowState.Detached) continue;
+                var parent = row.GetParentRow(parentRelation);
+                var parent2 = parent.GetParentRow(parentRelation2);
+                parent2.Delete();
+            }
+            set.AcceptChanges();
         }
     }
 }
