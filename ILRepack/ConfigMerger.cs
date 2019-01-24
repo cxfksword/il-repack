@@ -48,14 +48,15 @@ namespace ILRepacking
                 dataset.ReadXml(firstFile);
 
                 var mergedAssemblies = new HashSet<string>(repack.MergedAssemblies.Select(a => a.Name.Name));
+                var redirectedAssemblies = new HashSet<string>();
 
-                ProcessRedirects(dataset, mergedAssemblies, repack.Options);
+                ProcessRedirects(dataset, mergedAssemblies, redirectedAssemblies, repack.Options);
 
                 foreach (string configFile in validConfigFiles.Skip(1))
                 {
                     var nextDataset = new DataSet();
                     nextDataset.ReadXml(configFile);
-                    ProcessRedirects(nextDataset, mergedAssemblies, repack.Options);
+                    ProcessRedirects(nextDataset, mergedAssemblies, redirectedAssemblies, repack.Options);
                     RemoveVersions(nextDataset);
                     dataset.Merge(nextDataset);
                 }
@@ -72,7 +73,7 @@ namespace ILRepacking
             var table = set.Tables["supportedRuntime"];
             if (table == null) return;
 
-            var versions = table.Select().ToList();
+            var versions = table.Select();
             foreach (var row in versions)
             {
                 row.Delete();
@@ -80,23 +81,40 @@ namespace ILRepacking
             table.AcceptChanges();
         }
 
-        private static void ProcessRedirects(DataSet set, HashSet<string> mergedAssemblies, RepackOptions repackOptions)
+        private static void ProcessRedirects(DataSet set, HashSet<string> mergedAssemblies, HashSet<string> redirectedAssemblies, RepackOptions repackOptions)
         {
             if(repackOptions.KeepOtherVersionReferences) return;
 
             var table = set.Tables["assemblyIdentity"];
-            var table2 = set.Tables["dependentAssembly"];
-            if (table == null || table2 == null) return;
-            var parentRelation = table.ParentRelations[0];
-            var parentRelation2 = table2.ParentRelations[0];
+            var parentRelation = table?.ParentRelations["dependentAssembly_assemblyIdentity"];
+            if(parentRelation == null) return;
+
             var nameCol = table.Columns["name"];
-            var toDelete = table.Select().Where(r => mergedAssemblies.Contains(r[nameCol] as string)).ToList();
-            foreach (var row in toDelete)
+            foreach (var row in table.Select())
             {
-                if(row.RowState == DataRowState.Detached) continue;
+                var name = row[nameCol] as string;
+                if(name == null) continue;
                 var parent = row.GetParentRow(parentRelation);
-                var parent2 = parent.GetParentRow(parentRelation2);
-                parent2.Delete();
+                if (!mergedAssemblies.Contains(name) && !redirectedAssemblies.Contains(name))
+                {
+                    redirectedAssemblies.Add(name);
+                    continue;
+                }
+                parent.Delete();
+            }
+            set.AcceptChanges();
+
+            var bindingTable = set.Tables["assemblyBinding"];
+            var childRelation = bindingTable?.ChildRelations["assemblyBinding_dependentAssembly"];
+            if(childRelation == null) return;
+            
+            foreach (var binding in bindingTable.Select())
+            {
+                var children = binding.GetChildRows(childRelation);
+                if (children.Length == 0)
+                {
+                    binding.Delete();
+                }
             }
             set.AcceptChanges();
         }
