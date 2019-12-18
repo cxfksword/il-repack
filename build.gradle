@@ -1,7 +1,7 @@
 import org.gradle.internal.os.OperatingSystem
 
 plugins {
-  id 'com.ullink.msbuild' version '3.0'
+  id 'com.ullink.msbuild' version '3.6'
   id 'com.ullink.nuget' version '2.18'
   id 'com.ullink.nunit' version '1.12'
   id 'com.ullink.opencover' version '1.10'
