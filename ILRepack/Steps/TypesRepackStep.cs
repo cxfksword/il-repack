@@ -70,7 +70,7 @@ namespace ILRepacking.Steps
             foreach (var r in _repackContext.OtherAssemblies.SelectMany(x => x.Modules).SelectMany(m => m.Types))
             {
                 _logger.Verbose($"- Importing {r} from {r.Module}");
-                _repackImporter.Import(r, _repackContext.TargetAssemblyMainModule.Types, ShouldInternalize(r.FullName));
+                _repackImporter.Import(r, _repackContext.TargetAssemblyMainModule.Types, ShouldInternalize(r));
             }
         }
 
@@ -139,6 +139,36 @@ namespace ILRepacking.Steps
                     return false;
 
             return true;
+        }
+
+        private bool ShouldInternalize(TypeDefinition type)
+        {
+            if (!_repackOptions.Internalize)
+                return false;
+
+            if (IsSerializable(type)) 
+                return false;
+
+            return ShouldInternalize(type.FullName);
+        }
+
+        private bool IsSerializable(TypeDefinition type)
+        {
+            if (type.Attributes.HasFlag(TypeAttributes.Serializable))
+                return true;
+
+            if (!type.HasCustomAttributes) return false;
+
+            foreach (var attribute in type.CustomAttributes)
+            {
+                var name = attribute.AttributeType.FullName;
+                if(name == "System.Runtime.Serialization.DataContractAttribute")
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private TypeReference CreateReference(ExportedType type)
