@@ -43,17 +43,27 @@ namespace ILRepacking.Steps
 
             if (!_visitedTypes.Add(type)) return;
 
+            if(type.IsNested) return;
+
             if (type.HasFields)
             {
-                foreach (var field in type.Fields)
+                foreach (var field in type.Fields.Where(f => f.IsPublic))
                 {
                     EnsureDependencies(field.FieldType);
                 }
             }
 
+            bool IsPublic(PropertyDefinition p)
+            {
+                var getPublic = p.GetMethod != null && p.GetMethod.IsPublic;
+                var setPublic = p.SetMethod != null && p.SetMethod.IsPublic;
+
+                return getPublic || setPublic;
+            }
+
             if (type.HasProperties)
             {
-                foreach (var property in type.Properties)
+                foreach (var property in type.Properties.Where(IsPublic))
                 {
                     EnsureDependencies(property.PropertyType);
                 }
@@ -61,7 +71,7 @@ namespace ILRepacking.Steps
 
             if (type.HasEvents)
             {
-                foreach (var evt in type.Events)
+                foreach (var evt in type.Events.Where(e => e.AddMethod.IsPublic || e.RemoveMethod.IsPublic))
                 {
                     EnsureDependencies(evt.EventType);
                 }
@@ -69,7 +79,7 @@ namespace ILRepacking.Steps
 
             if (type.HasMethods)
             {
-                foreach (var method in type.Methods)
+                foreach (var method in type.Methods.Where(m => m.IsPublic))
                 {
                     foreach (var parameter in method.Parameters)
                     {
@@ -98,7 +108,7 @@ namespace ILRepacking.Steps
                 }
             }
 
-            if (type.Module != _repackContext.TargetAssemblyMainModule) return;
+            if (type.Scope != _repackContext.TargetAssemblyMainModule) return;
 
             var definition = type.Resolve();
 
