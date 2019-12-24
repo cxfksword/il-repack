@@ -339,6 +339,7 @@ namespace ILRepacking
                     signingStep,
                     new ReferencesRepackStep(Logger, this, Options),
                     new TypesRepackStep(Logger, this, _repackImporter, Options),
+                    new PublicTypesFixStep(Logger, this, _repackImporter, Options),
                     new ResourcesRepackStep(Logger, this, Options),
                     new AttributesRepackStep(Logger, this, _repackImporter, Options),
                     new ReferencesFixStep(Logger, this, _repackImporter, Options),
