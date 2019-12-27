@@ -89,10 +89,15 @@ namespace ILRepacking.Steps
 
             EnsureDependencies(type.BaseType);
 
+            MarkTypePublic(type);
+        }
+
+        private void MarkTypePublic(TypeDefinition type)
+        {
             if (type.IsNested)
             {
-                type.DeclaringType.IsPublic = true;
                 type.IsNestedPublic = true;
+                MarkTypePublic(type.DeclaringType);
             }
             else
             {
