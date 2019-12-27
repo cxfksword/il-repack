@@ -43,8 +43,6 @@ namespace ILRepacking.Steps
 
             if (!_visitedTypes.Add(type)) return;
 
-            if(type.IsNested) return;
-
             if (type.HasFields)
             {
                 foreach (var field in type.Fields.Where(f => f.IsPublic))
@@ -91,9 +89,15 @@ namespace ILRepacking.Steps
 
             EnsureDependencies(type.BaseType);
 
-            if (type.IsPublic) return;
-
-            type.IsPublic = true;
+            if (type.IsNested)
+            {
+                type.DeclaringType.IsPublic = true;
+                type.IsNestedPublic = true;
+            }
+            else
+            {
+                type.IsPublic = true;
+            }
         }
 
         private void EnsureDependencies(TypeReference type)
