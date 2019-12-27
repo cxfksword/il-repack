@@ -162,7 +162,8 @@ namespace ILRepacking.Steps
             foreach (var attribute in type.CustomAttributes)
             {
                 var name = attribute.AttributeType.FullName;
-                if(name == "System.Runtime.Serialization.DataContractAttribute")
+                if(name == "System.Runtime.Serialization.DataContractAttribute" ||
+                   name == "System.ServiceModel.ServiceContractAttribute")
                 {
                     return true;
                 }
