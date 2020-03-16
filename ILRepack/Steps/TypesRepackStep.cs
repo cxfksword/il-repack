@@ -157,19 +157,19 @@ namespace ILRepacking.Steps
             if (type.Attributes.HasFlag(TypeAttributes.Serializable))
                 return true;
 
-            if (!type.HasCustomAttributes) return false;
-
-            foreach (var attribute in type.CustomAttributes)
+            if (type.HasCustomAttributes && type.CustomAttributes.Any(IsSerializable))
             {
-                var name = attribute.AttributeType.FullName;
-                if(name == "System.Runtime.Serialization.DataContractAttribute" ||
-                   name == "System.ServiceModel.ServiceContractAttribute")
-                {
-                    return true;
-                }
+                return true;
             }
 
-            return false;
+            return type.HasNestedTypes && type.NestedTypes.Any(IsSerializable);
+        }
+
+        private bool IsSerializable(CustomAttribute attribute)
+        {
+            var name = attribute.AttributeType.FullName;
+            return name == "System.Runtime.Serialization.DataContractAttribute" ||
+                   name == "System.ServiceModel.ServiceContractAttribute";
         }
 
         private TypeReference CreateReference(ExportedType type)
