@@ -1,192 +1,44 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{4A253A60-D998-4CA2-B9D5-46567A2FBF80}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ILRepacking</RootNamespace>
-    <AssemblyName>ILRepack</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+    <TargetFrameworks>netstandard2.0;netcoreapp2.1;net461</TargetFrameworks>
     <StartupObject>ILRepacking.Application</StartupObject>
     <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <ApplicationVersion>2.1.9.0</ApplicationVersion>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
+    <AssemblyTitle>ILRepack</AssemblyTitle>
+    <Product>ILRepack</Product>
+    <Copyright>Copyright © Francois Valdy 2011</Copyright>
+    <AssemblyVersion>2.1.9.0</AssemblyVersion>
+    <FileVersion>2.1.9.0</FileVersion>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <DebugType>portable</DebugType>
     <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <DebugType>portable</DebugType>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BamlParser, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\BamlParser.1.0.0\lib\net35\BamlParser.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Fasterflect, Version=2.1.3.0, Culture=neutral, PublicKeyToken=38d18473284c1ca7, processorArchitecture=MSIL">
-      <HintPath>..\packages\fasterflect.2.1.3\lib\net40\Fasterflect.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Mono.Cecil, Version=0.11.2.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
-      <HintPath>..\packages\Mono.Cecil.0.11.2\lib\net40\Mono.Cecil.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil.Mdb, Version=0.11.2.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
-      <HintPath>..\packages\Mono.Cecil.0.11.2\lib\net40\Mono.Cecil.Mdb.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil.Pdb, Version=0.11.2.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
-      <HintPath>..\packages\Mono.Cecil.0.11.2\lib\net40\Mono.Cecil.Pdb.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Posix, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <HintPath>..\packages\Mono.Posix.4.0.0.0\lib\net40\Mono.Posix.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <PackageReference Include="BamlParser.NetStandard" Version="1.0.0" />
+    <PackageReference Include="fasterflect" Version="3.0.0" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Mono.Cecil" Version="0.11.2" />
+    <PackageReference Condition=" '$(TargetFramework)' != 'net461' " Include="Mono.Posix.NETStandard" Version="1.0.0" />
+    <PackageReference Condition=" '$(TargetFramework)' == 'net461' " Include="Mono.Posix" Version="4.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Application.cs" />
-    <Compile Include="CommandLine.cs" />
-    <Compile Include="ConfigMerger.cs" />
-    <Compile Include="DocumentationMerger.cs" />
-    <Compile Include="FileWrapper.cs" />
-    <Compile Include="ICommandLine.cs" />
-    <Compile Include="IFile.cs" />
-    <Compile Include="IRepackContext.cs" />
-    <Compile Include="IKVMLineIndexer.cs" />
-    <Compile Include="ILogger.cs" />
-    <Compile Include="IRepackCopier.cs" />
-    <Compile Include="IRepackImporter.cs" />
-    <Compile Include="LineNumberWriter.cs" />
-    <Compile Include="MappingHandler.cs" />
-    <Compile Include="ILRepack.cs" />
-    <Compile Include="MethodMatcher.cs" />
-    <Compile Include="Mixins\AssemblyNameReferenceCollectionMixins.cs" />
-    <Compile Include="Mixins\CollectionMixins.cs" />
-    <Compile Include="PermissionsetHelper.cs" />
-    <Compile Include="PlatformFixer.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReferenceFixator.cs" />
-    <Compile Include="ReflectionHelper.cs" />
-    <Compile Include="RepackImporter.cs" />
-    <Compile Include="RepackLogger.cs" />
-    <Compile Include="RepackOptions.cs" />
-    <Compile Include="RepackAssemblyResolver.cs" />
-    <Compile Include="ResReader.cs" />
-    <Compile Include="SerReader.cs" />
-    <Compile Include="Steps\AttributesRepackStep.cs" />
-    <Compile Include="Steps\IRepackStep.cs" />
-    <Compile Include="Steps\PublicTypesFixStep.cs" />
-    <Compile Include="Steps\ReferencesFixStep.cs" />
-    <Compile Include="Steps\ReferencesRepackStep.cs" />
-    <Compile Include="Steps\ResourceProcessing\BamlGenerator.cs" />
-    <Compile Include="Steps\ResourceProcessing\BamlResourcePatcher.cs" />
-    <Compile Include="Steps\ResourceProcessing\BamlStreamCollector.cs" />
-    <Compile Include="Steps\ResourceProcessing\BamlUtils.cs" />
-    <Compile Include="Steps\ResourceProcessing\GenericResourceProcessor.cs" />
-    <Compile Include="Steps\ResourceProcessing\IEmbeddedResourceProcessor.cs" />
-    <Compile Include="Steps\ResourceProcessing\IResProcessor.cs" />
-    <Compile Include="Steps\ResourcesRepackStep.cs" />
-    <Compile Include="Steps\ResourceProcessing\StringResourceProcessor.cs" />
-    <Compile Include="Steps\SigningStep.cs" />
-    <Compile Include="Steps\SourceServerData\HttpSourceServerDescriptor.cs" />
-    <Compile Include="Steps\SourceServerData\PdbStr.cs" />
-    <Compile Include="Steps\SourceServerData\SourceFileDescriptor.cs" />
-    <Compile Include="Steps\SourceServerData\SourceServerDataRepackStep.cs" />
-    <Compile Include="Steps\SourceServerData\StringMixins.cs" />
-    <Compile Include="Steps\TypesRepackStep.cs" />
-    <Compile Include="Steps\Win32Resources\PE\BinaryStreamWriter.cs" />
-    <Compile Include="Steps\Win32Resources\PE\ByteBuffer.cs" />
-    <Compile Include="Steps\Win32Resources\PE\ImageReader.cs" />
-    <Compile Include="Steps\Win32Resources\PE\BinaryStreamReader.cs" />
-    <Compile Include="Steps\Win32Resources\PE\ImageWriter.cs" />
-    <Compile Include="Steps\Win32Resources\PE\Section.cs" />
-    <Compile Include="Steps\Win32Resources\PE\SectionData.cs" />
-    <Compile Include="Steps\Win32Resources\ResourceDirectory.cs" />
-    <Compile Include="Steps\Win32Resources\ResourceEntry.cs" />
-    <Compile Include="Steps\Win32Resources\RsrcReader.cs" />
-    <Compile Include="Steps\Win32Resources\RsrcWriter.cs" />
-    <Compile Include="Steps\Win32Resources\Win32ResourceStep.cs" />
-    <Compile Include="Steps\XamlResourcePathPatcherStep.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
-      <Visible>False</Visible>
-      <ProductName>Windows Installer 3.1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
     <None Include="ILRepack.snk" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\packages\SourceLink.1.1.0\tools\pdbstr.exe" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

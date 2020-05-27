@@ -74,7 +74,7 @@ def commonNuspecMetadata = [
     authors: 'Alexander Vostres, Francois Valdy',
     owners: 'Alexander Vostres',
     projectUrl: 'https://github.com/Alexx999/il-repack',
-    copyright: 'Copyright Alexander Vostres 2018, Francois Valdy 2011-2015',
+    copyright: 'Copyright Alexander Vostres 2018-2020, Francois Valdy 2011-2015',
     requireLicenseAcceptance: false,
     dependencies: []
 ]
