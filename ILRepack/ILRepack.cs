@@ -86,6 +86,8 @@ namespace ILRepacking
             // TODO: this could be parallelized to gain speed
             var primary = MergedAssemblyFiles.FirstOrDefault();
             var debugSymbolsRead = false;
+            PrepareAssemblyResolver(primary);
+
             foreach (string assembly in MergedAssemblyFiles)
             {
                 var result = ReadInputAssembly(assembly, primary == assembly);
@@ -104,6 +106,14 @@ namespace ILRepacking
 
             MergedAssemblies = new List<AssemblyDefinition>(OtherAssemblies);
             MergedAssemblies.Insert(0, PrimaryAssemblyDefinition);
+        }
+
+        private void PrepareAssemblyResolver(string primaryAssembly)
+        {
+            ReaderParameters rp = new ReaderParameters(ReadingMode.Deferred);
+            rp.ThrowIfSymbolsAreNotMatching = false;
+            using var asm = AssemblyDefinition.ReadAssembly(primaryAssembly, rp);
+            GlobalAssemblyResolver.MatchTarget(asm.MainModule);
         }
 
         private AssemblyDefinitionContainer ReadInputAssembly(string assembly, bool isPrimary)
