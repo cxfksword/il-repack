@@ -146,14 +146,16 @@ namespace ILRepacking.Steps
             if (!_repackOptions.Internalize)
                 return false;
 
-            if (IsSerializable(type)) 
+            if (IsSerializableAndPublic(type)) 
                 return false;
 
             return ShouldInternalize(type.FullName);
         }
 
-        private bool IsSerializable(TypeDefinition type)
+        private bool IsSerializableAndPublic(TypeDefinition type)
         {
+            if (!type.IsPublic && !type.IsNestedPublic) return false;
+
             if (type.Attributes.HasFlag(TypeAttributes.Serializable))
                 return true;
 
@@ -162,7 +164,7 @@ namespace ILRepacking.Steps
                 return true;
             }
 
-            return type.HasNestedTypes && type.NestedTypes.Any(IsSerializable);
+            return type.HasNestedTypes && type.NestedTypes.Any(IsSerializableAndPublic);
         }
 
         private bool IsSerializable(CustomAttribute attribute)
