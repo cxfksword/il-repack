@@ -171,7 +171,9 @@ namespace ILRepacking.Steps
         {
             var name = attribute.AttributeType.FullName;
             return name == "System.Runtime.Serialization.DataContractAttribute" ||
-                   name == "System.ServiceModel.ServiceContractAttribute";
+                   name == "System.ServiceModel.ServiceContractAttribute" ||
+                   name == "System.Xml.Serialization.XmlRootAttribute" ||
+                   name == "System.Xml.Serialization.XmlTypeAttribute";
         }
 
         private TypeReference CreateReference(ExportedType type)
