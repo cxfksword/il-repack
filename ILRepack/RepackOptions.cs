@@ -41,11 +41,15 @@ namespace ILRepacking
             {
                 excludeFile = value;
                 ExcludeInternalizeMatches.Clear();
+                ExcludeInternalizeAssemblies.Clear();
                 if (!string.IsNullOrEmpty(excludeFile))
                 {
                     string[] lines = file.ReadAllLines(excludeFile);
                     foreach (var line in lines)
+                    {
                         ExcludeInternalizeMatches.Add(new Regex(line));
+                        ExcludeInternalizeAssemblies.Add(line);
+                    }
                 }
             }
         }
@@ -88,6 +92,10 @@ namespace ILRepacking
         {
             get { return excludeInternalizeMatches; }
         }
+        public HashSet<string> ExcludeInternalizeAssemblies
+        {
+            get { return excludeInternalizeAssemblies; }
+        }
         public Hashtable AllowedDuplicateTypes
         {
             get { return allowedDuplicateTypes; }
@@ -103,6 +111,7 @@ namespace ILRepacking
         private readonly Hashtable allowedDuplicateTypes = new Hashtable();
         private readonly List<string> allowedDuplicateNameSpaces = new List<string>();
         private readonly List<Regex> excludeInternalizeMatches = new List<Regex>();
+        private readonly HashSet<string> excludeInternalizeAssemblies = new HashSet<string>();
         private readonly ICommandLine cmd;
         private readonly IFile file;
         private string excludeFile;

@@ -4,7 +4,7 @@
     <ProjectGuid>{4A253A60-D998-4CA2-B9D5-46567A2FBF80}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>ILRepacking</RootNamespace>
-    <TargetFrameworks>netstandard2.0;netcoreapp2.1;net461</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netcoreapp3.1;net461</TargetFrameworks>
     <StartupObject>ILRepacking.Application</StartupObject>
     <PublishUrl>publish\</PublishUrl>
     <MapFileExtensions>true</MapFileExtensions>
@@ -14,7 +14,7 @@
     <AssemblyTitle>ILRepack</AssemblyTitle>
     <Product>ILRepack</Product>
     <Copyright>Copyright © Francois Valdy 2011</Copyright>
-    <Version>2.1.12.0</Version>
+    <Version>2.1.14.0</Version>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <LangVersion>latest</LangVersion>
@@ -29,7 +29,7 @@
     <PackageReference Include="BamlParser.NetStandard" Version="1.0.0" />
     <PackageReference Include="fasterflect" Version="3.0.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="Mono.Cecil" Version="0.11.2" />
+    <PackageReference Include="Mono.Cecil" Version="0.11.4" />
     <PackageReference Condition=" '$(TargetFramework)' != 'net461' " Include="Mono.Posix.NETStandard" Version="1.0.0" />
     <PackageReference Condition=" '$(TargetFramework)' == 'net461' " Include="Mono.Posix" Version="4.0.0" />
   </ItemGroup>

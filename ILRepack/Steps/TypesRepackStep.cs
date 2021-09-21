@@ -146,6 +146,11 @@ namespace ILRepacking.Steps
             if (!_repackOptions.Internalize)
                 return false;
 
+            if (_repackOptions.ExcludeInternalizeAssemblies.Contains(type.Module.Assembly.Name.Name))
+            {
+                return false;
+            }
+
             if (IsSerializableAndPublic(type)) 
                 return false;
 
