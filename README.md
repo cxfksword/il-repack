@@ -77,7 +77,6 @@ TODO
 ------
   * Crash-testing
   * Add remaining features from ILMerge (closed / align)
-  * Un-fork Cecil
   * Merge import process & reference fixing
 
 DONE
