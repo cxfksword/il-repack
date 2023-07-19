@@ -4,7 +4,7 @@
     <ProjectGuid>{4A253A60-D998-4CA2-B9D5-46567A2FBF80}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>ILRepacking</RootNamespace>
-    <TargetFrameworks>netstandard2.0;netcoreapp3.1;net461</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.1;net461</TargetFrameworks>
     <StartupObject>ILRepacking.Application</StartupObject>
     <PublishUrl>publish\</PublishUrl>
     <MapFileExtensions>true</MapFileExtensions>
@@ -12,12 +12,19 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <AssemblyTitle>ILRepack</AssemblyTitle>
-    <Product>ILRepack</Product>
+    <Product>ILRepack.Lib.Minor</Product>
     <Copyright>Copyright © Francois Valdy 2011</Copyright>
-    <Version>2.1.14.0</Version>
+    <Version>2.1.15-alpha.2</Version>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <LangVersion>latest</LangVersion>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageId>ILRepack.Lib.Minor</PackageId>
+    <Authors>cxfksword</Authors>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>true</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>portable</DebugType>
@@ -39,4 +46,30 @@
   <ItemGroup>
     <EmbeddedResource Include="..\packages\SourceLink.1.1.0\tools\pdbstr.exe" />
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="call &quot;$(SolutionDir)build.bat&quot; &quot;$(OutDir)&quot; &quot;$(TargetFramework)&quot;" />
+  </Target>
+
+
+  <PropertyGroup>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <IncludeContentInPack>true</IncludeContentInPack>
+    <TargetsForTfmSpecificContentInPackage>CustomContentTarget</TargetsForTfmSpecificContentInPackage>
+    <Description>ILRepack is meant at replacing ILMerge / Mono.Merge.</Description>
+  </PropertyGroup>
+  <Target Name="CustomContentTarget">
+    <ItemGroup>
+      <TfmSpecificPackageFile Include="$(OutDir)repack\ILRepack.dll">
+        <PackagePath>lib/$(TargetFramework)</PackagePath>
+      </TfmSpecificPackageFile>
+    </ItemGroup>
+  </Target>
+  <!-- <ItemGroup>
+    <Content Include="$(OutDir)repack\ILRepack.dll">
+        <Pack>true</Pack>
+        <PackagePath>lib\$(TargetFramework)</PackagePath>
+    </Content>
+  </ItemGroup> -->
+
 </Project>
